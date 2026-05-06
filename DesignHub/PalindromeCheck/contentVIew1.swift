@@ -70,3 +70,15 @@ func longestPalindromeRange(_ text: String) -> Range<Int> {
     
     return start..<(end + 1)
 }
+
+func expand(_ chars: [Character], _ left: Int, _ right: Int) -> Int {
+    var l = left
+    var r = right
+    
+    while l >= 0 && r < chars.count && chars[l] == chars[r] {
+        l -= 1
+        r += 1
+    }
+    
+    return r - l - 1
+}
