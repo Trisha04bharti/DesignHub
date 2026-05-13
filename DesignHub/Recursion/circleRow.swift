@@ -1,83 +1,122 @@
 import SwiftUI
 
-struct RecursiveCirclesView: View {
-    var maxDepth: Int = 4
-
+struct GeometryReaderBasicsView: View {
     var body: some View {
         GeometryReader { geo in
-            Canvas { context, size in
-                drawCircle(
-                    context: context,
-                    x: 90,
-                    y: size.height / 2,
-                    radius: 80,
-                    level: 1,
-                    maxLevel: maxDepth
-                )
-            }
-        }
-    }
+            VStack(spacing: 30) {
 
-    let colors: [Color] = [.red, .blue, .green, .orange, .purple, .pink]
+                // MARK: - Width & Height Info
 
-    func drawCircle(
-        context: GraphicsContext,
-        x: CGFloat,
-        y: CGFloat,
-        radius: CGFloat,
-        level: Int,
-        maxLevel: Int
-    ) {
-        // Base case — stop recursion
-        guard level <= maxLevel && radius >= 1 else { return }
+                Text("Width: \(Int(geo.size.width))")
+                    .font(.title2)
 
-        // Draw current circle
-        let rect = CGRect(
-            x: x - radius,
-            y: y - radius,
-            width: radius * 2,
-            height: radius * 2
-        )
-        let path = Path(ellipseIn: rect)
-        let color = colors[(level - 1) % colors.count]
-        context.fill(path, with: .color(color))
+                Text("Height: \(Int(geo.size.height))")
+                    .font(.title2)
 
-        // Calculate where next circle starts
-        let nextRadius = radius / 2
-        let nextX = x + radius + nextRadius + 6  // gap of 6
+                // MARK: - Responsive Rectangle
 
-        // Recurse with half the radius
-        drawCircle(
-            context: context,
-            x: nextX,
-            y: y,
-            radius: nextRadius,
-            level: level + 1,
-            maxLevel: maxLevel
-        )
-    }
-}
+                Rectangle()
+                    .fill(Color.blue)
+                    .frame(
+                        width: geo.size.width * 0.7,
+                        height: 80
+                    )
+                    .overlay(
+                        Text("70% Width")
+                            .foregroundColor(.white)
+                            .bold()
+                    )
 
-struct ContentView: View {
-    @State private var depth: Double = 4
+                // MARK: - Centered Circle
 
-    var body: some View {
-        VStack(spacing: 20) {
-            RecursiveCirclesView(maxDepth: Int(depth))
-                .frame(height: 220)
-                .background(Color(red: 0.97, green: 0.96, blue: 0.95))
+                ZStack {
+                    Color.gray.opacity(0.15)
+
+                    Circle()
+                        .fill(Color.red)
+                        .frame(width: 80, height: 80)
+                        .position(
+                            x: geo.size.width / 2,
+                            y: 100
+                        )
+                }
+                .frame(height: 200)
                 .cornerRadius(12)
 
-            HStack {
-                Text("Depth: \(Int(depth))")
-                    .frame(width: 80, alignment: .leading)
-                Slider(value: $depth, in: 1...6, step: 1)
+                Spacer()
+                
+                Text("SwiftUI")
+                    .padding()
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.blue, lineWidth: 2)
+                    )
+                
+//              Circle()
+//                    .frame(width: 50)
+//                    .foregroundStyle(Color.gray)
+//                    .overlay(alignment: .center){
+//                        Text("hello")
+//                    }
+                
+//                Circle()
+//                    .stroke(Color.blue, lineWidth: 5)
+//                    .frame(width: 100, height: 100)
+                
             }
-            .padding(.horizontal)
+            .padding()
         }
-        .padding()
+        .background(Color.white)
     }
 }
 
-#Preview { ContentView() }
+struct ContentView3: View {
+    var body: some View {
+//        GeometryReaderBasicsView()
+        
+       Triangle()
+//            .fill(Color.red)
+            .stroke(Color.red , lineWidth : 3)
+            .frame(width: 100 , height: 100)
+            
+        
+    }
+}
+
+//struct LineShape: Shape {
+//    func path(in rect: CGRect) -> Path {
+//        var path = Path()
+//
+//        path.move(to: CGPoint(x: 0, y: 0))
+//
+//        path.addLine(to: CGPoint(x: 200, y: 200))
+//
+//        return path
+//    }
+//}
+
+struct Triangle: Shape {
+    func path(in rect: CGRect) -> Path {
+
+        var path = Path()
+
+        // Top center
+        path.move(to: CGPoint(x: rect.midX, y: rect.minY))
+
+        // Bottom right
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+
+        // Bottom left
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+
+        // Close back to start
+        path.closeSubpath()
+
+        return path
+    }
+}
+
+#Preview {
+    ContentView3()
+}
 
