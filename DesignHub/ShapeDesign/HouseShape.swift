@@ -5,6 +5,8 @@
 //  Created by Vikram Kumar on 15/05/26.
 //
 
+import SwiftUI
+
 struct HousePathView: View {
     var body: some View {
         Path { path in
