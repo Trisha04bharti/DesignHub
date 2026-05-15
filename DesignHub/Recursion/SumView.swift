@@ -1,57 +1,36 @@
-//
-//  SumView.swift
-//  DesignHub
-//
-//  Created by Vikram Kumar on 14/05/26.
-//
-
 import SwiftUI
 
-struct SumView: View {
+struct starView : View {
     
-    @State private var input = ""
-    @State private var answer = 0
+   @State  var emojiArr = ["😛" , "👄" , "🩸" , "🌸"  , "🪷" , "❤️" ]
+    @State var cb : String = ""
+    
+    @State var b = false
     
     var body: some View {
-        
-        VStack(spacing: 20) {
-            
-            Text("Recursive Sum")
-                .font(.largeTitle)
-                .bold()
-            
-            TextField("Enter Number", text: $input)
-                .textFieldStyle(.roundedBorder)
-                .keyboardType(.numberPad)
-                .padding(.horizontal)
-            
-            Button("Calculate Sum") {
+        NavigationStack{
+            VStack{
                 
-                if let number = Int(input) {
-                    answer = recursiveSum(number)
+                
+                    List(emojiArr , id : \.self ){ ch in
+                         Text(ch)
+                            .onTapGesture {
+                                cb = ch
+                                b.toggle()
+                            }
+                    }
+                
+                if b {
+                    Text(cb)
                 }
+                
+                
             }
-            .buttonStyle(.borderedProminent)
-            
-            Text("Answer: \(answer)")
-                .font(.title2)
-                .bold()
+            .navigationTitle("shape creator")
         }
-        .padding()
-    }
-    
-    func recursiveSum(_ n: Int) -> Int {
-        
-        // Base Case
-        if n == 0 {
-            return 0
-        }
-        
-        // Recursive Call
-        return n + recursiveSum(n - 1)
     }
 }
 
 #Preview {
-    SumView()
+    starView()
 }
